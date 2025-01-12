@@ -8,6 +8,7 @@ import { showAlert } from "../../utils/alert";
 import * as yup from "yup";
 import { fr } from "yup-locales";
 import { setLocale } from "yup";
+import Input from "../../components/forms/Input";
 setLocale(fr);
 
 const SiteCreate = ({ setNewSite, newSite }) => {
@@ -75,40 +76,29 @@ const SiteCreate = ({ setNewSite, newSite }) => {
     <>
       <div className="modal-body">
         <div className="">
-          <div className="form-floating mb-3 ">
-            <input
-              type="text"
-              name="name"
-              className={`form-control ${error?.errors?.name && "is-invalid"} ${
-                formErrors?.name && "is-invalid"
-              }`}
-              id="name"
-              placeholder="Site"
-              value={newSite.name}
-              onChange={handleChange}
-            />
-            <label htmlFor="name">Site</label>
-            <small className="text-danger fst-italic">
-              {formErrors?.name || error?.errors?.name}
-            </small>
-          </div>
-          <div className="form-floating  mb-3 ">
-            <input
-              type="text"
-              name="description"
-              className={`form-control ${
-                error?.errors?.description && "is-invalid"
-              } ${formErrors?.description && "is-invalid"}`}
-              id="description"
-              placeholder="description"
-              value={newSite.description}
-              onChange={handleChange}
-            />
-            <label htmlFor="description">Description</label>
-            <small className="text-danger fst-italic">
-              {formErrors?.description || error?.errors?.description}
-            </small>
-          </div>
+          <Input
+            handleChange={handleChange}
+            label="Site"
+            name={"name"}
+            validation={`${error?.errors?.name && "is-invalid"} ${
+              formErrors?.name && "is-invalid"
+            }`}
+            validationMessage={formErrors?.name || error?.errors?.name}
+            value={newSite.name}
+          />
+
+          <Input
+            handleChange={handleChange}
+            label="Description"
+            name={"description"}
+            validation={`${error?.errors?.description && "is-invalid"} ${
+              formErrors?.description && "is-invalid"
+            }`}
+            validationMessage={
+              formErrors?.description || error?.errors?.description
+            }
+            value={newSite.description}
+          />
         </div>
       </div>
       <div className="modal-footer">
