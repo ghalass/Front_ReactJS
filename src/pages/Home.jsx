@@ -1,6 +1,6 @@
 import React from "react";
-import Counter from "../components/counter/Counter";
-import Posts from "../components/posts/Posts";
+// import Counter from "../components/counter/Counter";
+// import Posts from "../components/posts/Posts";
 
 const Home = () => {
   return (
@@ -25,9 +25,9 @@ const Home = () => {
           <h1>HOME PAGE</h1>
 
           {/* ******************** */}
-          <Posts />
+          {/* <Posts /> */}
           <hr />
-          <Counter />
+          {/* <Counter /> */}
         </section>
       </main>
     </div>

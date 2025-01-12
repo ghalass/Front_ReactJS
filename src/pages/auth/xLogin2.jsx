@@ -4,22 +4,18 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Input from "../../components/forms/Input";
 
 import * as yup from "yup";
-import { da, fr } from "yup-locales";
+import { fr } from "yup-locales";
 import { setLocale } from "yup";
 import { loginAuth } from "../../features/auth/authApi";
 import { showAlert } from "../../utils/alert";
-import { useStateContext } from "../../contexts/contextprovider";
-import axiosClient from "../../axiosClient";
 setLocale(fr);
 
-const Login = () => {
+const Login2 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isProcessing, error, token } = useSelector((state) => state.auth);
 
-  const { setUser, setToken } = useStateContext();
-
-  const [loginUser, setLoginUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({ email: "", password: "" });
   const [formErrors, setFormErrors] = useState({
     email: null,
     password: null,
@@ -33,52 +29,29 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       // FRONT-END ==> Validate form data
-      await schema.validate(loginUser, { abortEarly: false });
+      await schema.validate(user, { abortEarly: false });
       // console.warn("FRONT-END VALIDATION : Form data is valid!", user);
       setFormErrors({ email: "", password: "" }); // Clear errors
 
       // BACK-END
-      axiosClient
-        .post("/login", loginUser)
-        .then((data) => {
-          if (data?.data?.errors) {
+      dispatch(loginAuth({ email: user.email, password: user.password })).then(
+        (res) => {
+          // CHECH IF NO ERROR FROM BACK-END
+          if (res.meta.requestStatus === "fulfilled") {
+            showAlert("success", "Connecté avec succès!");
+            navigate("/");
+            // dispatch(resetErrors());
             setFormErrors({
-              email: data.data.errors.email,
+              email: "",
               password: "",
             });
           } else {
-            setUser(data.data.user);
-            setToken(data.data.token);
-            navigate("/");
-            showAlert("success", "Connecté avec succès!");
+            console.error(res);
+            console.error(res?.payload?.message);
+            showAlert("warning", res?.payload?.message);
           }
-        })
-        .catch((err) => {
-          const response = err.response;
-          setFormErrors({
-            email: response.data.errors.email,
-            password: "",
-          });
-        });
-
-      // dispatch(loginAuth({ email: user.email, password: user.password })).then(
-      //   (res) => {
-      //     // CHECH IF NO ERROR FROM BACK-END
-      //     if (res.meta.requestStatus === "fulfilled") {
-      //       showAlert("success", "Connecté avec succès!");
-      //       navigate("/");
-      //       // dispatch(resetErrors());
-      //       setFormErrors({
-      //         email: "",
-      //         password: "",
-      //       });
-      //     } else {
-      //       console.error(res);
-      //       console.error(res?.payload?.message);
-      //       showAlert("warning", res?.payload?.message);
-      //     }
-      //   }
-      // );
+        }
+      );
       // console.log(crudStatus);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
@@ -93,7 +66,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginUser((prevData) => ({
+    setUser((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -113,7 +86,7 @@ const Login = () => {
                 formErrors?.email && "is-invalid"
               }`}
               validationMessage={formErrors?.email || error?.errors?.email}
-              value={loginUser.email}
+              value={user.email}
             />
 
             <Input
@@ -127,7 +100,7 @@ const Login = () => {
               validationMessage={
                 formErrors?.password || error?.errors?.password
               }
-              value={loginUser.password}
+              value={user.password}
             />
 
             <div className="form-floating d-grid mb-2">
@@ -154,8 +127,14 @@ const Login = () => {
 
           <p>
             Vous n'avez pas un compte?
-            <NavLink to={"/register"} className="ms-1">
-              S'enregistrer
+            <NavLink to={"/"} className="ms-1">
+              Register
+            </NavLink>
+          </p>
+          <p>
+            Allez à la page d'accueil
+            <NavLink to={"/"} className="ms-1">
+              Accueil
             </NavLink>
           </p>
         </section>
@@ -164,4 +143,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login2;

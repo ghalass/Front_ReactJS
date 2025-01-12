@@ -9,28 +9,41 @@ import messages3 from "../assets/img/messages-3.jpg";
 import profileImg from "../assets/img/profile-img.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAuth, userAuth } from "../features/auth/authApi";
+import { useStateContext } from "../contexts/contextprovider";
+import axiosClient from "../axiosClient";
+import { showAlert } from "../utils/alert";
 
 const Header = () => {
   // Fonction pour gérer l'événement de clic
   const toggleBodyClassHandler = () => {
     toggleBodyClass("toggle-sidebar");
   };
-  const dispatch = useDispatch();
-  function logout() {
-    dispatch(logoutAuth());
-  }
+  // const dispatch = useDispatch();
+  // function logout() {
+  //   dispatch(logoutAuth());
+  // }
 
   /*** */
-  const { token, user } = useSelector((state) => state.auth);
-  useEffect(() => {
-    // if (token) {
-    console.log("rendered...");
-    dispatch(userAuth());
-    // }
-  }, [token]);
+  // const { token, user } = useSelector((state) => state.auth);
+  // useEffect(() => {
+  //   // if (token) {
+  //   console.log("rendered...");
+  //   dispatch(userAuth());
+  //   // }
+  // }, [token]);
   /*** */
 
-  console.log(user);
+  // console.log(user);
+
+  /*** */
+  const { user, setUser, setToken } = useStateContext();
+  const onLogout = () => {
+    axiosClient.post("/logout").then(({}) => {
+      setUser(null);
+      setToken(null);
+      showAlert("success", "Déconnecter avec succès!");
+    });
+  };
 
   return (
     <>
@@ -236,6 +249,14 @@ const Header = () => {
               </ul>
             </li>
 
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {/*  */}
+            {/*  */}
             <li className="nav-item dropdown pe-3">
               <a
                 className="nav-link nav-profile d-flex align-items-center pe-0"
@@ -247,134 +268,72 @@ const Header = () => {
                   alt="Profile"
                   className="rounded-circle"
                 />
+                <span className="ms-2">Welcome</span>
                 <span className="d-none d-md-block dropdown-toggle ps-2">
-                  K. Anderson
+                  {user.name}
                 </span>
               </a>
 
-              {user ? (
-                <>
-                  <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li className="dropdown-header">
-                      <h6>Kevin Anderson - {user.name}</h6>
-                      <span>Web Designer</span>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
+              <>
+                <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                  <li className="dropdown-header">
+                    <h6></h6>
+                    <span>Web Designer</span>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
 
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="users-profile.html"
-                      >
-                        <i className="bi bi-person"></i>
-                        <span>My Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="users-profile.html"
+                    >
+                      <i className="bi bi-person"></i>
+                      <span>My Profile</span>
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
 
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="users-profile.html"
-                      >
-                        <i className="bi bi-gear"></i>
-                        <span>Account Settings</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="users-profile.html"
+                    >
+                      <i className="bi bi-gear"></i>
+                      <span>Account Settings</span>
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
 
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="pages-faq.html"
-                      >
-                        <i className="bi bi-question-circle"></i>
-                        <span>Need Help?</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="pages-faq.html"
+                    >
+                      <i className="bi bi-question-circle"></i>
+                      <span>Need Help?</span>
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
 
-                    <li>
-                      <button
-                        onClick={logout}
-                        className="dropdown-item d-flex align-items-center"
-                      >
-                        <i className="bi bi-box-arrow-right"></i>
-                        Se déconnecter
-                      </button>
-                    </li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li className="dropdown-header">
-                      <h6>Kevin Anderson</h6>
-                      <span>Web Designer</span>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="users-profile.html"
-                      >
-                        <i className="bi bi-person"></i>
-                        <span>My Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="users-profile.html"
-                      >
-                        <i className="bi bi-gear"></i>
-                        <span>Account Settings</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="pages-faq.html"
-                      >
-                        <i className="bi bi-question-circle"></i>
-                        <span>Need Help?</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-
-                    <li>
-                      <button
-                        onClick={logout}
-                        className="dropdown-item d-flex align-items-center"
-                      >
-                        <i className="bi bi-box-arrow-right"></i>
-                        Se déconnecter
-                      </button>
-                    </li>
-                  </ul>
-                </>
-              )}
+                  <li>
+                    <button
+                      onClick={onLogout}
+                      className="dropdown-item d-flex align-items-center"
+                    >
+                      <i className="bi bi-box-arrow-right"></i>
+                      Se déconnecter
+                    </button>
+                  </li>
+                </ul>
+              </>
             </li>
           </ul>
         </nav>
