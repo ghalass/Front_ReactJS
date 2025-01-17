@@ -15,9 +15,11 @@ setLocale(fr);
 function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isProcessing, error } = useSelector((state) => state.auth);
+  // const { isProcessing, error } = useSelector((state) => state.auth);
 
   const { setUser, setToken } = useStateContext();
+
+  const [processing, setProcessing] = useState(false);
 
   const [newUser, setNewUser] = useState({
     name: "",
@@ -59,6 +61,8 @@ function Register() {
       // BACK-END
       console.log(newUser);
 
+      setProcessing(true);
+
       axiosClient
         .post("/register", newUser)
         .then((data) => {
@@ -71,9 +75,13 @@ function Register() {
         })
         .catch((err) => {
           const response = err.response;
-          if (response && response.status === 422) {
-            console.log(response.data.errors);
-          }
+          setFormErrors({
+            email: response.data.errors.email,
+            password: response.data.errors.password,
+          });
+        })
+        .finally(() => {
+          setProcessing(false);
         });
 
       // dispatch(loginAuth({ email: user.email, password: user.password })).then(
@@ -125,10 +133,8 @@ function Register() {
                 handleChange={handleChange}
                 label="Nom"
                 name={"name"}
-                validation={`${error?.errors?.name && "is-invalid"} ${
-                  formErrors?.name && "is-invalid"
-                }`}
-                validationMessage={formErrors?.name || error?.errors?.name}
+                validation={`${formErrors?.name && "is-invalid"}`}
+                validationMessage={formErrors?.name}
                 value={newUser.name}
               />
 
@@ -136,10 +142,8 @@ function Register() {
                 handleChange={handleChange}
                 label="Email"
                 name={"email"}
-                validation={`${error?.errors?.email && "is-invalid"} ${
-                  formErrors?.email && "is-invalid"
-                }`}
-                validationMessage={formErrors?.email || error?.errors?.email}
+                validation={`${formErrors?.email && "is-invalid"}`}
+                validationMessage={formErrors?.email}
                 value={newUser.email}
               />
 
@@ -148,12 +152,8 @@ function Register() {
                 label="Mot de passe"
                 name={"password"}
                 type="password"
-                validation={`${error?.errors?.password && "is-invalid"} ${
-                  formErrors?.password && "is-invalid"
-                }`}
-                validationMessage={
-                  formErrors?.password || error?.errors?.password
-                }
+                validation={`${formErrors?.password && "is-invalid"}`}
+                validationMessage={formErrors?.password}
                 value={newUser.password}
               />
 
@@ -163,12 +163,9 @@ function Register() {
                 name={"password_confirmation"}
                 type="password"
                 validation={`${
-                  error?.errors?.password_confirmation && "is-invalid"
-                } ${formErrors?.password_confirmation && "is-invalid"}`}
-                validationMessage={
-                  formErrors?.password_confirmation ||
-                  error?.errors?.password_confirmation
-                }
+                  formErrors?.password_confirmation && "is-invalid"
+                }`}
+                validationMessage={formErrors?.password_confirmation}
                 value={newUser.password_confirmation}
               />
 
@@ -177,9 +174,9 @@ function Register() {
                   onClick={handleRegister}
                   type="button"
                   className="btn btn-outline-primary"
-                  disabled={isProcessing}
+                  disabled={processing}
                 >
-                  {isProcessing && (
+                  {processing && (
                     <span className="text-center">
                       <div
                         className="spinner-border spinner-border-sm me-1"

@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Input from "../../components/forms/Input";
 
 import * as yup from "yup";
-import { da, fr } from "yup-locales";
+import { fr } from "yup-locales";
 import { setLocale } from "yup";
 import { loginAuth } from "../../features/auth/authApi";
 import { showAlert } from "../../utils/alert";
@@ -15,9 +15,11 @@ setLocale(fr);
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isProcessing, error, token } = useSelector((state) => state.auth);
+  // const { isProcessing, error, token } = useSelector((state) => state.auth);
 
   const { setUser, setToken } = useStateContext();
+
+  const [processing, setProcessing] = useState(false);
 
   const [loginUser, setLoginUser] = useState({ email: "", password: "" });
   const [formErrors, setFormErrors] = useState({
@@ -36,6 +38,8 @@ const Login = () => {
       await schema.validate(loginUser, { abortEarly: false });
       // console.warn("FRONT-END VALIDATION : Form data is valid!", user);
       setFormErrors({ email: "", password: "" }); // Clear errors
+
+      setProcessing(true);
 
       // BACK-END
       axiosClient
@@ -57,8 +61,11 @@ const Login = () => {
           const response = err.response;
           setFormErrors({
             email: response.data.errors.email,
-            password: "",
+            password: response.data.errors.password,
           });
+        })
+        .finally(() => {
+          setProcessing(false);
         });
 
       // dispatch(loginAuth({ email: user.email, password: user.password })).then(
@@ -109,10 +116,8 @@ const Login = () => {
               handleChange={handleChange}
               label="Email"
               name={"email"}
-              validation={`${error?.errors?.email && "is-invalid"} ${
-                formErrors?.email && "is-invalid"
-              }`}
-              validationMessage={formErrors?.email || error?.errors?.email}
+              validation={`${formErrors?.email && "is-invalid"}`}
+              validationMessage={formErrors?.email}
               value={loginUser.email}
             />
 
@@ -121,12 +126,8 @@ const Login = () => {
               label="Mot de passe"
               name={"password"}
               type="password"
-              validation={`${error?.errors?.password && "is-invalid"} ${
-                formErrors?.password && "is-invalid"
-              }`}
-              validationMessage={
-                formErrors?.password || error?.errors?.password
-              }
+              validation={`${formErrors?.password && "is-invalid"}`}
+              validationMessage={formErrors?.password}
               value={loginUser.password}
             />
 
@@ -135,9 +136,9 @@ const Login = () => {
                 onClick={handleLogin}
                 type="button"
                 className="btn btn-outline-primary"
-                disabled={isProcessing}
+                disabled={processing}
               >
-                {isProcessing && (
+                {processing && (
                   <span className="text-center">
                     <div
                       className="spinner-border spinner-border-sm me-1"

@@ -13,7 +13,7 @@ import Swal from 'sweetalert2'
  * showAlert('success', 'Opération réussie!', 'Success!')
  * showAlert('warning', 'Opération réussie!', 'Warning!')
  */
-export function showAlert(icon, text, title = '') {
+export function showAlert(icon, text, title = '', timer = null) {
     if (title != '') {
         switch (icon) {
             case 'info':
@@ -46,7 +46,8 @@ export function showAlert(icon, text, title = '') {
         showConfirmButton: false,
         text: text,
         confirmButtonText: 'OK',
-        timer: 4000
+        timer: timer === 'static' ? null : 4000,
+        showCloseButton: true
     })
 }
 
