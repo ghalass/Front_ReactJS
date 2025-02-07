@@ -21,6 +21,7 @@ const authSlice = createSlice({
             // loginAuth
             .addCase(loginAuth.pending, (state) => {
                 state.isProcessing = true;
+
             }).addCase(loginAuth.fulfilled, (state, action) => {
                 state.isProcessing = false;
                 state.status = 'succeeded';

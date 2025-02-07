@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { fetchSites } from "../../features/sites/sitesApi";
+import { fetchSites } from "../../features/typeparcs/typeparcsApi";
 import { useDispatch, useSelector } from "react-redux";
-import SitesList from "./SitesList";
-import SiteModal from "./SiteModal";
+import TypeparcsList from "./TypeparcsList";
+import TypeparcModal from "./TypeparcModal";
 import { openModal } from "../../utils/utils";
-import { resetErrors } from "../../features/sites/SitesSlice";
+import { resetErrors } from "../../features/typeparcs/typeparcsSlice";
 
-const Sites = () => {
+const Typeparcs = () => {
   const [operation, setOperation] = useState("new");
   const [newSite, setNewSite] = useState({ name: "", description: "" });
   const [editSite, setEditSite] = useState({
@@ -33,22 +33,7 @@ const Sites = () => {
   return (
     <div className="container-fluid">
       <main id="main" className="main">
-        <div className="pagetitle">
-          <h1>Sites Page</h1>
-          <nav>
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <a href="index.html">Sites</a>
-              </li>
-              <li className="breadcrumb-item">Pages</li>
-              <li className="breadcrumb-item active">Sites</li>
-            </ol>
-          </nav>
-        </div>
-
         <section className="section">
-          <h1>SITES PAGE</h1>
-
           <button
             onClick={() => {
               setOperation("new");
@@ -71,7 +56,7 @@ const Sites = () => {
           </button>
 
           {/* LISTE DES SITES */}
-          <SitesList
+          <TypeparcsList
             sites={sites}
             setEditSite={setEditSite}
             setDestroySite={setDestroySite}
@@ -81,7 +66,7 @@ const Sites = () => {
       </main>
 
       {/* MODAL CRUD */}
-      <SiteModal
+      <TypeparcModal
         newSite={newSite}
         editSite={editSite}
         destroySite={destroySite}
@@ -94,4 +79,4 @@ const Sites = () => {
   );
 };
 
-export default Sites;
+export default Typeparcs;

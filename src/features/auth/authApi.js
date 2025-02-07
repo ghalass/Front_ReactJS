@@ -14,9 +14,17 @@ export const loginAuth = createAsyncThunk('auth/loginAuth', async (userData, { r
                 "Content-Type": "application/json",
             }
         });
+
         const data = response.data;
+
         if (!data?.errors) {
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('ACCESS_TOKEN', data.token);
+
+            const expiresInMinutes = 60;
+            const expiresAt = new Date().getTime() + expiresInMinutes * 60 * 1000;
+            console.log(expiresAt);
+
+            localStorage.setItem('ACCESS_TOKEN_EXPIRATION', JSON.stringify(expiresAt));
         };
 
         return response.data;
@@ -33,12 +41,13 @@ export const logoutAuth = createAsyncThunk('auth/logoutAuth', async (_, { reject
     try {
         const response = await axios.post(`${API_URL}/logout`, {
             headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`,
+                authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
                 Accept: "application/json",
                 "Content-Type": "application/json",
             }
         });
-        localStorage.removeItem('token')
+        localStorage.removeItem('ACCESS_TOKEN')
+        localStorage.removeItem('ACCESS_TOKEN_EXPIRATION')
         // if (!data?.errors) localStorage.setItem('token', data.token);
 
         return response;
@@ -55,7 +64,7 @@ export const userAuth = createAsyncThunk('auth/userAuth', async (_, { rejectWith
     try {
         const res = await axios.get(`${API_URL}/user`, {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
                 Accept: "application/json",
                 "Content-Type": "application/json",
             }

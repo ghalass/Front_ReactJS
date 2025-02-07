@@ -1,7 +1,3 @@
-import React from "react";
-// import Counter from "../components/counter/Counter";
-// import Posts from "../components/posts/Posts";
-
 const Home = () => {
   return (
     <div className="container-fluid">
@@ -20,14 +16,7 @@ const Home = () => {
         </div>
 
         <section className="section">
-          {/* ******************** */}
-
           <h1>HOME PAGE</h1>
-
-          {/* ******************** */}
-          {/* <Posts /> */}
-          <hr />
-          {/* <Counter /> */}
         </section>
       </main>
     </div>

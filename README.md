@@ -6,3 +6,5 @@ npm install -S yup
 npm install -S yup-locales
 
 npm install uuid
+
+npm install zustand

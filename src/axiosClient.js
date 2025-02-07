@@ -19,9 +19,10 @@ axiosClient.interceptors.response.use(
     (error) => {
         try {
             const { response } = error;
-            if (response.status === 401) {
+            if (response.status === 401) { // Incorrect or expired credentialsncorrect or expired credentials
                 // for security ==> i delete the acces_token
                 localStorage.removeItem("ACCESS_TOKEN");
+                localStorage.removeItem("ACCESS_TOKEN_EXPIRE");
             }
         } catch (err) {
             console.error(error);
@@ -31,6 +32,8 @@ axiosClient.interceptors.response.use(
                 console.log(msg);
                 // for security ==> i delete the acces_token
                 localStorage.removeItem("ACCESS_TOKEN");
+                localStorage.removeItem("ACCESS_TOKEN_EXPIRE");
+
                 showAlert('error', msg, '', 'static')
             }
         }

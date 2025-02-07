@@ -10,6 +10,7 @@ export function openModal(modalId) {
         document.getElementById(modalId)
     );
     myModal.show();
+
 };
 export function closeModal(modalId) {
     const myModal = bootstrap.Modal.getInstance(

@@ -1,27 +1,26 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Input from "../../components/forms/Input";
 
 import * as yup from "yup";
 import { fr } from "yup-locales";
 import { setLocale } from "yup";
-import { loginAuth } from "../../features/auth/authApi";
 import { showAlert } from "../../utils/alert";
 import { useStateContext } from "../../contexts/contextprovider";
 import axiosClient from "../../axiosClient";
 setLocale(fr);
 
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { isProcessing, error, token } = useSelector((state) => state.auth);
 
   const { setUser, setToken } = useStateContext();
 
   const [processing, setProcessing] = useState(false);
 
-  const [loginUser, setLoginUser] = useState({ email: "", password: "" });
+  const [loginUser, setLoginUser] = useState({
+    email: "mike@email.com",
+    password: "123",
+  });
   const [formErrors, setFormErrors] = useState({
     email: null,
     password: null,
@@ -67,26 +66,6 @@ const Login = () => {
         .finally(() => {
           setProcessing(false);
         });
-
-      // dispatch(loginAuth({ email: user.email, password: user.password })).then(
-      //   (res) => {
-      //     // CHECH IF NO ERROR FROM BACK-END
-      //     if (res.meta.requestStatus === "fulfilled") {
-      //       showAlert("success", "Connecté avec succès!");
-      //       navigate("/");
-      //       // dispatch(resetErrors());
-      //       setFormErrors({
-      //         email: "",
-      //         password: "",
-      //       });
-      //     } else {
-      //       console.error(res);
-      //       console.error(res?.payload?.message);
-      //       showAlert("warning", res?.payload?.message);
-      //     }
-      //   }
-      // );
-      // console.log(crudStatus);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         const newErrors = err.inner.reduce((acc, currentError) => {

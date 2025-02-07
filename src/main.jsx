@@ -11,7 +11,6 @@ import { ContextProvider } from "./contexts/contextprovider.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={storeApp}>
-      {/* <App /> */}
       <ContextProvider>
         <RouterProvider router={router} />
       </ContextProvider>
